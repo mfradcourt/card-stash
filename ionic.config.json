@@ -1,0 +1,7 @@
+{
+  "name": "card-stash",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
