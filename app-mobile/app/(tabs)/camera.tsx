@@ -1,11 +1,18 @@
 import { StyleSheet, Image, Platform } from 'react-native';
 import {CameraView, CameraType, useCameraPermissions, Camera} from 'expo-camera';
-import { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { Button, Text, TouchableOpacity, View } from 'react-native';
+import {CardsContext} from "@/context/cards-context";
+import Screen3 from "@/app/(tabs)/explore";
+import {sleepAsync} from "expo-dev-launcher/bundle/functions/sleepAsync";
 
-export default function TabTwoScreen() {
+const CameraScreen: React.FC = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+
+  const context = useContext(CardsContext);
+
+  const { cards, handleAddCard } = context;
 
   useEffect (() => {
     const getCameraPermissions = async () => {
@@ -18,9 +25,13 @@ export default function TabTwoScreen() {
   }, []);
 
   // @ts-ignore
-  const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  const handleBarCodeScanned = async ({ type, data }) => {
+    if (!scanned) {
+      setScanned(true);
+      handleAddCard('card x', data, type);
+
+      await sleepAsync(1000);
+    }
   };
 
   const renderCamera = () => {
@@ -54,16 +65,12 @@ export default function TabTwoScreen() {
       <Text style={styles.title}>Welcome to the Barcode Scanner App!</Text>
       <Text style={styles.paragraph}>Scan a barcode to start your job.</Text>
       {renderCamera()}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => setScanned(false)}
-        disabled={scanned}
-      >
-        <Text style={styles.buttonText}>Scan You Barcode</Text>
-      </TouchableOpacity>
+      <Button title="Scan Again" onPress={() => setScanned(false)} />
     </View>
   );
 }
+
+export default CameraScreen;
 
 const styles = StyleSheet.create({
   container: {

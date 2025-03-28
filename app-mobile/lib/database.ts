@@ -1,5 +1,5 @@
 import * as SQLite from 'expo-sqlite';
-import {SQLiteDatabase} from "expo-sqlite";
+import {SQLiteDatabase} from 'expo-sqlite';
 
 const db = SQLite.openDatabaseSync('card-stash.db');
 
@@ -90,10 +90,22 @@ export const updateCard = (id: number, name: string, barcode_value: string, barc
 };
 
 // Delete a Card
-export const deleteCard = (id: number): Promise<void> => {
+export const deleteCard = (id: number) => {
+  try {
+    // @ts-ignore
+    const result = db.runSync('DELETE FROM cards WHERE id = $id', { $id: id });
+
+    return result;
+
+  } catch (error) {
+    console.error(error);
+    throw Error('Failed to delete card');
+  }
+
+
   return new Promise((resolve, reject) => {
     // @ts-ignore
-    db.withTransactionSync(tx => {
+    db.withTransactionAsync(tx => {
       tx.executeSql(
         'DELETE FROM cards WHERE id = ?;',
         [id],

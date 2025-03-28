@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { View, Text, FlatList, TextInput, Button, StyleSheet } from 'react-native';
 import { CardsProvider, CardsContext } from '../../context/cards-context';
 import { Card } from '../../types/types';
+import {Link} from "expo-router";
 
 const CardsScreen: React.FC = () => {
   const context = useContext(CardsContext);
@@ -17,18 +18,21 @@ const CardsScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <Text>Card Name</Text>
       <TextInput
         style={styles.input}
         placeholder="Card Name"
         value={name}
         onChangeText={setName}
       />
+      <Text>Barcode</Text>
       <TextInput
         style={styles.input}
         placeholder="Barcode Value"
         value={barcodeValue}
         onChangeText={setBarcodeValue}
       />
+      <Text>Type</Text>
       <TextInput
         style={styles.input}
         placeholder="Barcode Type"
@@ -38,9 +42,9 @@ const CardsScreen: React.FC = () => {
       <Button title="Add Card" onPress={() => {
         if (name && barcodeValue && barcodeType) {
           handleAddCard(name, barcodeValue, barcodeType);
-          setName('f');
-          setBarcodeValue('df');
-          setBarcodeType('fd');
+          setName('');
+          setBarcodeValue('');
+          setBarcodeType('');
         }
       }} />
 
@@ -49,10 +53,12 @@ const CardsScreen: React.FC = () => {
         keyExtractor={(item: Card) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Text style={styles.title}>{item.name}</Text>
+            <Text style={styles.title}>{item.name} {item.id}</Text>
             <Text>Barcode: {item.barcode_value} ({item.barcode_type})</Text>
-            <Text>Created: {item.created_at}</Text>
-            <Text>Updated: {item.updated_at}</Text>
+            <Link href={{
+              pathname: '/details/[id]',
+              params: { id: item.id.toString() },
+            }}>Details</Link>
             <Button title="Delete" color="red" onPress={() => handleDeleteCard(item.id)} />
           </View>
         )}
