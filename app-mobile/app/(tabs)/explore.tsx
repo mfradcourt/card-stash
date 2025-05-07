@@ -1,8 +1,9 @@
+import DropdownComponent from "@/components/DropDown";
+import { Link } from "expo-router";
 import React, { useContext, useState } from 'react';
-import { View, Text, FlatList, TextInput, Button, StyleSheet } from 'react-native';
-import { CardsProvider, CardsContext } from '../../context/cards-context';
+import { Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { CardsContext } from '../../context/cards-context';
 import { Card } from '../../types/types';
-import {Link} from "expo-router";
 
 const CardsScreen: React.FC = () => {
   const context = useContext(CardsContext);
@@ -16,6 +17,11 @@ const CardsScreen: React.FC = () => {
   const [barcodeValue, setBarcodeValue] = useState('');
   const [barcodeType, setBarcodeType] = useState('');
 
+  const data = [
+    { label: 'QR Code', value: 'qr' },
+    { label: 'Code 128', value: 'code128' },
+  ];
+  
   return (
     <View style={styles.container}>
       <Text>Card Name</Text>
@@ -32,21 +38,23 @@ const CardsScreen: React.FC = () => {
         value={barcodeValue}
         onChangeText={setBarcodeValue}
       />
-      <Text>Type</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Barcode Type"
-        value={barcodeType}
-        onChangeText={setBarcodeType}
+      
+      <DropdownComponent data={data} label="Type" 
+          onChange={(item) => { setBarcodeType(item.value); }}
+          value={barcodeType}
+          placeholder="Select Barcode Type"
+           />
+
+      <Button title="Add Card" 
+        onPress={() => {
+          if (name && barcodeValue && barcodeType) {
+            handleAddCard(name, barcodeValue, barcodeType);
+            setName('');
+            setBarcodeValue('');
+            setBarcodeType('');
+          }
+        }} 
       />
-      <Button title="Add Card" onPress={() => {
-        if (name && barcodeValue && barcodeType) {
-          handleAddCard(name, barcodeValue, barcodeType);
-          setName('');
-          setBarcodeValue('');
-          setBarcodeType('');
-        }
-      }} />
 
       <FlatList
         data={cards}
