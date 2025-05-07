@@ -1,9 +1,15 @@
-import {StyleSheet, View, Text, FlatList, SafeAreaView, TouchableOpacity, Button} from 'react-native';
+import {StyleSheet, View, Text, FlatList, SafeAreaView, TouchableOpacity, Button, Dimensions} from 'react-native';
 
 import {CardsContext} from '@/context/cards-context';
 import {Card} from "@/types/types";
 import React, {useContext} from "react";
-import {Link} from "expo-router";
+import {Link, router} from "expo-router";
+
+const itemMargin = 10;
+const numColumns = 2;
+const screenWidth = Dimensions.get('window').width;
+const horizontalPadding = 20;
+const itemWidth = (screenWidth - horizontalPadding * 2 - itemMargin * numColumns) / numColumns;
 
 export default function HomeScreen() {
   const context = useContext(CardsContext);
@@ -12,7 +18,7 @@ export default function HomeScreen() {
     return <Text>Loading...</Text>;
   }
 
-  const { cards, handleDeleteCard } = context;
+  const {cards, handleDeleteCard} = context;
 
   if (!context) {
     return (
@@ -22,16 +28,36 @@ export default function HomeScreen() {
     )
   }
 
-  const renderItem = ({ item }) => (
-    <Link href={{
-      pathname: '/details/[id]',
-      params: { id: item.id.toString() },
-    }}>
-      <View style={styles.item}>
+  const renderItem = ({ item, index }: { item: Card; index: number }) => {
+    const isLeftColumn = index % numColumns === 0;
+
+    const itemStyle = {
+      width: itemWidth,
+      marginRight: isLeftColumn ? itemMargin : 0,
+      marginBottom: itemMargin,
+      backgroundColor: "#3498db",
+      padding: 20,
+      borderRadius: 10,
+      alignItems: "center",
+      justifyContent: "center",
+    };
+
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          // Imperative navigation if needed
+          router.push({
+            pathname: "/details/[id]",
+            params: { id: item.id.toString() },
+          });
+        }}
+        style={itemStyle}
+      >
         <Text style={styles.text}>{item.name}</Text>
-      </View>
-    </Link>
-  );
+      </TouchableOpacity>
+    );
+  };
+
 
   return (
     <View style={styles.container}>
@@ -59,7 +85,7 @@ export default function HomeScreen() {
         renderItem={renderItem}
         keyExtractor={(item: Card) => item.id.toString()}
         numColumns={2} // Two items per row
-        columnWrapperStyle={styles.row} // Ensures proper spacing
+        contentContainerStyle={styles.flatListContainer}
       />
     </View>
   );
@@ -67,26 +93,18 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, marginTop: 60 },
-  input: { borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5 },
-  card: { padding: 15, borderBottomWidth: 1, marginBottom: 10, color: 'white' },
-  title: { fontWeight: 'bold', fontSize: 18, color: 'white' },
-  row: {
-    justifyContent: "space-between",
-    marginBottom: 10,
+  flatListContainer: {
+    paddingTop: 10,
   },
   item: {
-    flex: 1,
-    backgroundColor: "#000000",
+    backgroundColor: '#3498db',
     padding: 20,
-    marginHorizontal: 5,
-    borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    maxWidth: "50%"
+    borderRadius: 10,
+    alignItems: 'center',
   },
   text: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+    color: '#fff',
+    fontWeight: 'bold',
+    height: 20
   },
 });
