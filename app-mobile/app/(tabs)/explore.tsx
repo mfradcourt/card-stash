@@ -1,4 +1,4 @@
-import DropdownComponent from "@/components/DropDown";
+import DropdownComponent from "@/components/ui/DropDown";
 import { Link } from "expo-router";
 import React, { useContext, useState } from 'react';
 import { Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';

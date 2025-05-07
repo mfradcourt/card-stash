@@ -14,7 +14,6 @@ export interface DropDownProps<T> {
     value?: T;
     placeholder?: string;
     label?: string;
-    searchField?: string;
     search?: boolean;
     searchPlaceholder?: string;
     searchPlaceholderTextColor?: string;
@@ -22,6 +21,8 @@ export interface DropDownProps<T> {
     autoScroll?: boolean;
     showLeftIcon?: boolean;
     height?: number;
+    labelField?: string;
+    valueField?: string;
 }
 
   const DropdownComponent = <T,>(props: DropDownProps<T>) => {
@@ -52,12 +53,15 @@ export interface DropDownProps<T> {
           iconStyle={styles.iconStyle}
           data={props.data}
           maxHeight={props.height || 300}
-          labelField="label"
-          valueField="value"
+          labelField={props.labelField || 'label'}
+          valueField={props.valueField || 'value'}
           placeholder={!isFocus ? props.placeholder : '...'}
           search={props.search}
-          searchPlaceholder="Search..."
+          searchPlaceholder={props.searchPlaceholder || 'Search...'}
+          searchPlaceholderTextColor={props.searchPlaceholderTextColor || 'gray'}
           value={value}
+          disable={props.disable}
+          autoScroll={props.autoScroll}
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
           onChange={item => {
