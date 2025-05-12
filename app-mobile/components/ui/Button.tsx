@@ -1,4 +1,4 @@
-import { ActivityIndicator, Text, TouchableOpacity } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 interface ButtonProps {
     title: string;
@@ -22,19 +22,18 @@ const Button: React.FC<ButtonProps> = ({
             {loading ? (
                 <ActivityIndicator size="small" color="#fff" />
             ) : (
-                <Text>{title}</Text>
+                <Text style={styles.buttonText}>{title}</Text>
             )}
         </TouchableOpacity>
     );
 }
 
 export default Button;
-const styles = {
+const styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         fontSize: 16,
-        fontWeight: "700",
-    },
+    },  
     button: {
         backgroundColor: '#007BFF',
         padding: 10,
@@ -47,4 +46,4 @@ const styles = {
     disabledButton: {
         backgroundColor: '#ccc',
     },
-};
+});
