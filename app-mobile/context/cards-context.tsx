@@ -1,7 +1,7 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { initDB, getCards, addCard, updateCard, deleteCard } from '../lib/database';
-import { Card } from '../types/types';
 import * as SQLite from "expo-sqlite";
+import React, { createContext, ReactNode, useEffect, useState } from 'react';
+import { addCard, deleteCard, getCards, initDB, updateCard } from '../lib/database';
+import { Card } from '../types/types';
 
 interface CardsContextType {
   cards: Card[];
@@ -29,10 +29,10 @@ export const CardsProvider: React.FC<CardsProviderProps> = ({ children }) => {
       loadCards();
     }).catch(err => console.error('❌ Database init failed:', err));
   }, []);
-
+ 
   const loadCards = async () => {
     setLoading(true);
-    const data = await getCards(db);
+    const data = getCards(db) as Card[];
     setCards(data);
     setLoading(false);
     console.log(data);

@@ -14,9 +14,6 @@ export interface DropDownProps<T> {
     value?: T;
     placeholder?: string;
     label?: string;
-    search?: boolean;
-    searchPlaceholder?: string;
-    searchPlaceholderTextColor?: string;
     disable?: boolean;
     autoScroll?: boolean;
     showLeftIcon?: boolean;
@@ -32,14 +29,11 @@ export interface DropDownProps<T> {
     useEffect(() => setValue(props.value!), [props.value]);
 
     const renderLabel = () => {
-      if (value || isFocus) {
         return (
           <Text style={[styles.label, isFocus && { color: 'blue' }]}>
             {props.label || 'Select item'}
           </Text>
         );
-      }
-      return null;
     };
 
     return (
@@ -49,16 +43,12 @@ export interface DropDownProps<T> {
           style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
-          inputSearchStyle={styles.inputSearchStyle}
           iconStyle={styles.iconStyle}
           data={props.data}
           maxHeight={props.height || 300}
           labelField={props.labelField || 'label'}
           valueField={props.valueField || 'value'}
-          placeholder={!isFocus ? props.placeholder : '...'}
-          search={props.search}
-          searchPlaceholder={props.searchPlaceholder || 'Search...'}
-          searchPlaceholderTextColor={props.searchPlaceholderTextColor || 'gray'}
+          placeholder={ props.placeholder}
           value={value}
           disable={props.disable}
           autoScroll={props.autoScroll}
@@ -87,11 +77,12 @@ export interface DropDownProps<T> {
 
   const styles = StyleSheet.create({
     dropdown: {
-      height: 50,
       marginVertical: 16,
-      borderWidth: 0.5,
-      borderRadius: 8,
       paddingHorizontal: 8,
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 4,
+      padding: 8,
     },
     icon: {
       marginRight: 5,
@@ -103,14 +94,10 @@ export interface DropDownProps<T> {
       fontSize: 16,
     },
     selectedTextStyle: {
-      fontSize: 16,
+      fontSize: 14,
     },
     iconStyle: {
       width: 20,
       height: 20,
-    },
-    inputSearchStyle: {
-      height: 40,
-      fontSize: 16,
     },
   });
