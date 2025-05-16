@@ -46,7 +46,16 @@ const CardsScreen: React.FC = () => {
            />
 
     <Button
-      title="Scan Barcode"
+      style={styles.button}
+      title="Add Card"
+      icon={ 
+        <AntDesign style={{ marginRight: 8}}
+          name="plus"
+          size={18}
+          color="white"
+        />
+      }
+      iconPosition="left"
       onPress={() => { addCard(); }}
     />
 
@@ -90,4 +99,5 @@ const styles = StyleSheet.create({
   input: { borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5 },
   card: { padding: 15, borderBottomWidth: 1, marginBottom: 10, color: 'white', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   title: { fontWeight: 'bold', fontSize: 18, color: 'white' },
+  button: { marginVertical: 24}
 });

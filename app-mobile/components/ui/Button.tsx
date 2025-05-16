@@ -1,28 +1,40 @@
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { ReactElement } from "react";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface ButtonProps {
     title: string;
+    icon?: ReactElement;
+    iconPosition?: 'left' | 'right';
     onPress: () => void;
     disabled?: boolean;
     loading?: boolean;
+    style?: object;
 }
 
 const Button: React.FC<ButtonProps> = ({
     title,
     onPress,
     disabled,
-    loading
+    loading,
+    icon,
+    iconPosition = 'left',
+    style,
 }) => {
     return (
         <TouchableOpacity
+            
             onPress={onPress}
             disabled={disabled || loading}
-            style={[styles.button, disabled && styles.disabledButton]}
+            style={[styles.button, style, disabled && styles.disabledButton]}
         >
             {loading ? (
                 <ActivityIndicator size="small" color="#fff" />
             ) : (
-                <Text style={styles.buttonText}>{title}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    {icon && iconPosition === 'left' && icon}
+                    <Text style={styles.buttonText}>{title}</Text>
+                    {icon && iconPosition === 'right' && icon}
+                </View>
             )}
         </TouchableOpacity>
     );
@@ -40,7 +52,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        marginVertical: 10,
+        marginVertical: 16,
         width: '100%',
     },
     disabledButton: {
