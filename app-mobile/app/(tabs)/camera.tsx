@@ -1,18 +1,14 @@
-import { StyleSheet, Image, Platform } from 'react-native';
-import {CameraView, CameraType, useCameraPermissions, Camera} from 'expo-camera';
-import React, {useState, useEffect, useContext} from 'react';
-import { Button, Text, TouchableOpacity, View } from 'react-native';
-import {CardsContext} from "@/context/cards-context";
-import Screen3 from "@/app/(tabs)/explore";
-import {sleepAsync} from "expo-dev-launcher/bundle/functions/sleepAsync";
+import { CardsContext } from "@/context/cards-context";
+import { Camera, CameraView } from 'expo-camera';
+import { sleepAsync } from "expo-dev-launcher/bundle/functions/sleepAsync";
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
 const CameraScreen: React.FC = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
   const context = useContext(CardsContext);
-
-  const { cards, handleAddCard } = context;
 
   useEffect (() => {
     const getCameraPermissions = async () => {
@@ -28,7 +24,7 @@ const CameraScreen: React.FC = () => {
   const handleBarCodeScanned = async ({ type, data }) => {
     if (!scanned) {
       setScanned(true);
-      handleAddCard('card x', data, type);
+      context!.handleAddCard('card x', data, type);
 
       await sleepAsync(1000);
     }

@@ -1,16 +1,11 @@
-import {Image, StyleSheet, Platform, Text} from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { View, Button, Alert } from "react-native";
-import * as FileSystem from 'expo-file-system';
-import {Barcode} from "expo-barcode-generator";
-import React from 'react';
-import * as SQLite from "expo-sqlite";
-import * as Sharing from "expo-sharing";
 import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from "expo-sharing";
+import * as SQLite from "expo-sqlite";
+import React from 'react';
+import { Alert, Button, View } from "react-native";
 
 
 const db = SQLite.openDatabaseSync('card-stash.db');
