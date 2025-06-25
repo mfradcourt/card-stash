@@ -1,9 +1,10 @@
-import {StyleSheet, View, Text, FlatList, SafeAreaView, TouchableOpacity, Button, Dimensions} from 'react-native';
+import { Dimensions, FlatList, SafeAreaView, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
-import {CardsContext} from '@/context/cards-context';
-import {Card} from "@/types/types";
-import React, {useContext} from "react";
-import {Link, router} from "expo-router";
+import DotLoader from '@/components/ui/DotLoader';
+import { CardsContext } from '@/context/cards-context';
+import { Card } from "@/types/types";
+import { router } from "expo-router";
+import React, { useContext } from "react";
 
 const itemMargin = 10;
 const numColumns = 2;
@@ -13,17 +14,15 @@ const itemWidth = (screenWidth - horizontalPadding * 2 - itemMargin * numColumns
 
 export default function HomeScreen() {
   const context = useContext(CardsContext);
+  const cards = context?.cards;
 
-  if (!context) {
-    return <Text>Loading...</Text>;
-  }
-
-  const {cards, handleDeleteCard} = context;
-
-  if (!context) {
+  if (!cards || cards.length === 0) {
     return (
-      <SafeAreaView>
-        <Text>Scan your first card !</Text>
+      <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 24}} >Scan your first card  </Text>
+          <DotLoader size={8} color="#262626" spacing={8}  />
+        </View>
       </SafeAreaView>
     )
   }
@@ -31,7 +30,7 @@ export default function HomeScreen() {
   const renderItem = ({ item, index }: { item: Card; index: number }) => {
     const isLeftColumn = index % numColumns === 0;
 
-    const itemStyle = {
+    const itemStyle : StyleProp<ViewStyle> = {
       width: itemWidth,
       marginRight: isLeftColumn ? itemMargin : 0,
       marginBottom: itemMargin,
@@ -61,25 +60,6 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={{
-          borderWidth: 1,
-          borderColor: 'red',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 30,
-          position: 'absolute',
-          top: 10,
-          right: 20,
-          height: 30,
-          backgroundColor: 'red',
-          borderRadius: 100,
-          zIndex: 999999
-        }}
-        onPress={() => { alert('Button is pressed') }}
-      >
-        <Text style={{ color: "white" }}>+</Text>
-      </TouchableOpacity>
       <FlatList
         data={cards}
         renderItem={renderItem}

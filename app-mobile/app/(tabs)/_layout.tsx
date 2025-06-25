@@ -1,6 +1,6 @@
-import { Tabs } from 'expo-router';
+import { Tabs, useRouter } from 'expo-router';
 import React from 'react';
-import {Alert, Button, Platform} from 'react-native';
+import { Platform, TouchableOpacity } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -10,7 +10,8 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
+  const router = useRouter();
+  
   return (
     <Tabs
       screenOptions={{
@@ -31,10 +32,13 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           headerRight: () => (
-            <Button
-              title="Action"
-              onPress={() => Alert.alert("Header Button Pressed!")}
-            />
+             <TouchableOpacity
+                onPress={() => router.navigate('/(tabs)/camera')}
+                style={{ marginHorizontal: 16 }}
+                hitSlop={8}
+              >
+              <IconSymbol size={28} name="qrcode.viewfinder" color="black" />
+            </TouchableOpacity>
           ),
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
