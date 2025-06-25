@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="#1e40af" />
+  
+  <!-- Wallet shape with cards -->
+  <g>
+    <!-- Wallet back -->
+    <path d="M120 180 L120 380 Q120 400 140 400 L372 400 Q392 400 392 380 L392 180 Q392 160 372 160 L140 160 Q120 160 120 180" fill="#2563eb" />
+    
+    <!-- Wallet flap -->
+    <path d="M120 180 Q120 160 140 160 L372 160 Q392 160 392 180 L392 220 Q392 240 372 240 L140 240 Q120 240 120 220 Z" fill="#3b82f6" />
+    
+    <!-- Card stack inside wallet -->
+    <!-- Back card -->
+    <rect x="150" y="200" width="140" height="90" rx="8" fill="#fbbf24" transform="rotate(-3 220 245)" />
+    
+    <!-- Middle card -->
+    <rect x="160" y="210" width="140" height="90" rx="8" fill="#f59e0b" transform="rotate(-1.5 230 255)" />
+    
+    <!-- Front card (credit card style) -->
+    <rect x="170" y="220" width="140" height="90" rx="8" fill="#f97316" />
+    
+    <!-- Card chip -->
+    <rect x="185" y="240" width="30" height="24" rx="4" fill="#fcd34d" />
+    
+    <!-- Card lines -->
+    <rect x="185" y="275" width="110" height="8" rx="2" fill="#fed7aa" />
+    <rect x="185" y="288" width="80" height="6" rx="2" fill="#fed7aa" />
+    
+    <!-- Lock icon on wallet -->
+    <g transform="translate(256, 340)">
+      <!-- Lock body -->
+      <rect x="-20" y="-10" width="40" height="30" rx="4" fill="#fbbf24" />
+      <!-- Lock shackle -->
+      <path d="M -15 -10 L -15 -20 Q -15 -30 -5 -30 L 5 -30 Q 15 -30 15 -20 L 15 -10" 
+            fill="none" stroke="#fbbf24" stroke-width="6" stroke-linecap="round" />
+      <!-- Keyhole -->
+      <circle cx="0" cy="5" r="5" fill="#1e40af" />
+    </g>
+  </g>
+</svg>
