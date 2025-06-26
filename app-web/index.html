@@ -8,6 +8,27 @@
     <meta name="description" content="Your personal card collection manager" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>Card Stash</title>
+    <script>
+      // Prevent flash of wrong theme
+      (function() {
+        const getTheme = () => {
+          try {
+            const stored = localStorage.getItem('card-stash-theme')
+            if (stored === 'light') return 'light'
+            if (stored === 'dark') return 'dark'
+            if (stored === 'system' || !stored) {
+              return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+            }
+            return 'light'
+          } catch {
+            return 'light'
+          }
+        }
+        
+        const theme = getTheme()
+        document.documentElement.classList.toggle('dark', theme === 'dark')
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
