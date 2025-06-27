@@ -172,11 +172,6 @@ export function CameraScanner({ onScan, isActive }: CameraScannerProps) {
     }
   }, [isActive, scanBarcode])
 
-  const stopScanning = () => {
-    console.log('Manual stop scanning...')
-    scanningRef.current = false
-    setIsScanning(false)
-  }
 
   const startScanning = () => {
     console.log('Manual start scanning...')
