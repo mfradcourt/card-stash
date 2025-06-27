@@ -13,10 +13,15 @@ export default defineConfig({
       manifest: {
         name: 'Card Stash',
         short_name: 'CardStash',
-        description: 'Your personal card collection manager',
+        description: 'Your personal card collection manager - Store and scan all your loyalty cards, gift cards, and memberships in one place',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
+        orientation: 'portrait-primary',
+        start_url: '/?source=pwa',
+        scope: '/',
+        lang: 'en',
+        categories: ['productivity', 'utilities'],
         icons: [
           {
             src: 'pwa-192x192.png',

@@ -3,6 +3,7 @@ import { ThemeProvider } from './contexts/ThemeContext'
 import { CardsProvider } from './contexts/CardsContext'
 import { Layout } from './components/Layout'
 import { CardsList } from './pages/CardsList'
+import { InstallPrompt } from './components/InstallPrompt'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
               <Route index element={<CardsList />} />
             </Route>
           </Routes>
+          <InstallPrompt />
         </Router>
       </CardsProvider>
     </ThemeProvider>
