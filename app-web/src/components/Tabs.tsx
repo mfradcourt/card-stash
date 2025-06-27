@@ -37,7 +37,16 @@ export function Tabs({ tabs, activeTab, onTabChange }: TabsProps) {
       
       {/* Tab content */}
       <div className="mt-4">
-        {tabs.find(tab => tab.id === activeTab)?.content}
+        {tabs.map((tab) => (
+          <div
+            key={tab.id}
+            className={cn(
+              activeTab === tab.id ? 'block' : 'hidden'
+            )}
+          >
+            {tab.content}
+          </div>
+        ))}
       </div>
     </div>
   )

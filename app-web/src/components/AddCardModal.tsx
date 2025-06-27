@@ -38,8 +38,13 @@ export function AddCardModal({ isOpen, onClose }: AddCardModalProps) {
   const formData = watch()
 
   const handleScan = (result: string) => {
+    alert(`Barcode detected: ${result}`)
     setScannedCode(result)
     setValue('barcode', result)
+    // Auto-populate name if empty
+    if (!formData.name.trim()) {
+      setValue('name', `Card ${result}`)
+    }
   }
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
