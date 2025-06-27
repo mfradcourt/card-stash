@@ -1,6 +1,6 @@
 import { useRef, useCallback, useEffect, useState } from 'react'
 import Webcam from 'react-webcam'
-import { BrowserMultiFormatReader, DecodeHintType, BarcodeFormat } from '@zxing/library'
+import { BrowserMultiFormatReader, BarcodeFormat } from '@zxing/library'
 
 interface CameraScannerProps {
   onScan: (result: string) => void
