@@ -88,12 +88,6 @@ export function CameraScanner({ onScan, isActive }: CameraScannerProps) {
     })
   }, [handleDevices])
 
-  const stopScanning = useCallback(() => {
-    console.log('Stopping scanner...')
-    scanningRef.current = false
-    setIsScanning(false)
-  }, [])
-
   const scanBarcode = useCallback(async () => {
     if (!webcamRef.current || !codeReaderRef.current || !scanningRef.current) {
       console.log('Scanning cancelled: missing refs or not scanning')
@@ -121,7 +115,9 @@ export function CameraScanner({ onScan, isActive }: CameraScannerProps) {
             const formatName = getFormatName(result.getBarcodeFormat())
             console.log('Barcode detected:', result.getText(), 'Format:', formatName, `(${result.getBarcodeFormat()})`)
             onScan(result.getText())
-            stopScanning()
+            // Stop scanning
+            scanningRef.current = false
+            setIsScanning(false)
           }
         } catch (err) {
           console.log('No barcode found in this frame:', err instanceof Error ? err.message : 'Unknown error')
@@ -139,35 +135,55 @@ export function CameraScanner({ onScan, isActive }: CameraScannerProps) {
     } catch (err) {
       console.error('Scanning error:', err)
     }
-  }, [onScan, stopScanning])
-
-  const startScanning = useCallback(() => {
-    console.log('Starting scanner...')
-    scanningRef.current = true
-    setIsScanning(true)
-    scanBarcode()
-  }, [scanBarcode])
+  }, [onScan])
 
   // Start/stop scanning based on isActive prop
   useEffect(() => {
     console.log('Scanner isActive changed:', isActive, 'scanningRef:', scanningRef.current)
-    if (isActive && !scanningRef.current) {
-      // Add a small delay to ensure camera is ready
-      setTimeout(() => {
-        if (isActive) {
-          startScanning()
-        }
-      }, 500)
-    } else if (!isActive && scanningRef.current) {
-      stopScanning()
-    }
     
-    return () => {
-      if (scanningRef.current) {
-        stopScanning()
+    if (isActive && !scanningRef.current) {
+      console.log('Starting automatic scan in 2 seconds...')
+      // Add a delay to ensure camera is ready
+      const timer = setTimeout(() => {
+        console.log('Timer fired, checking if still active and camera ready...')
+        if (isActive && !scanningRef.current && webcamRef.current && codeReaderRef.current) {
+          console.log('Starting scanning from useEffect')
+          scanningRef.current = true
+          setIsScanning(true)
+          scanBarcode()
+        } else {
+          console.log('Cannot start scanning:', {
+            isActive,
+            scanningRefCurrent: scanningRef.current,
+            webcamReady: !!webcamRef.current,
+            codeReaderReady: !!codeReaderRef.current
+          })
+        }
+      }, 2000) // Increased delay to 2 seconds
+      
+      return () => {
+        console.log('Clearing timer')
+        clearTimeout(timer)
       }
+    } else if (!isActive && scanningRef.current) {
+      console.log('Stopping scanner because not active')
+      scanningRef.current = false
+      setIsScanning(false)
     }
-  }, [isActive, startScanning, stopScanning])
+  }, [isActive, scanBarcode])
+
+  const stopScanning = () => {
+    console.log('Manual stop scanning...')
+    scanningRef.current = false
+    setIsScanning(false)
+  }
+
+  const startScanning = () => {
+    console.log('Manual start scanning...')
+    scanningRef.current = true
+    setIsScanning(true)
+    scanBarcode()
+  }
 
   const videoConstraints: MediaStreamConstraints['video'] = {
     width: { ideal: 1920 },
@@ -178,8 +194,19 @@ export function CameraScanner({ onScan, isActive }: CameraScannerProps) {
 
   if (error) {
     return (
-      <div className="text-center py-8">
+      <div className="text-center py-8 space-y-4">
         <p className="text-red-600 dark:text-red-400">{error}</p>
+        <button
+          onClick={() => {
+            console.log('Retrying camera access...')
+            setError('')
+            // Force component remount by changing key would be ideal, but let's try clearing error first
+            window.location.reload()
+          }}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Retry Camera Access
+        </button>
       </div>
     )
   }
@@ -213,11 +240,23 @@ export function CameraScanner({ onScan, isActive }: CameraScannerProps) {
           audio={false}
           screenshotFormat="image/jpeg"
           videoConstraints={videoConstraints}
-          onUserMedia={() => console.log('Camera access granted')}
+          onUserMedia={() => {
+            console.log('Camera access granted')
+            setError('') // Clear any previous errors
+          }}
           onUserMediaError={(err) => {
             const errorMsg = 'Camera access denied: ' + (typeof err === 'string' ? err : err.message)
-            console.error(errorMsg)
+            console.error('Camera error:', err)
             setError(errorMsg)
+            
+            // Suggest solutions based on error type
+            if (errorMsg.includes('Failed to allocate videosource')) {
+              setError('Camera is in use by another application. Please close other apps using the camera and refresh the page.')
+            } else if (errorMsg.includes('Permission denied')) {
+              setError('Camera permission denied. Please allow camera access and refresh the page.')
+            } else {
+              setError(errorMsg)
+            }
           }}
           className="w-full rounded-lg"
           mirrored={false}
@@ -251,6 +290,33 @@ export function CameraScanner({ onScan, isActive }: CameraScannerProps) {
           <li>Fill most of the blue frame with the barcode</li>
           <li>Try different distances (10-20cm)</li>
         </ul>
+      </div>
+      
+      {/* Temporary debug button */}
+      <div className="mt-4 space-y-2">
+        <button
+          type="button"
+          onClick={() => {
+            console.log('Manual scan triggered - isActive:', isActive, 'isScanning:', isScanning)
+            console.log('webcamRef.current:', !!webcamRef.current)
+            console.log('codeReaderRef.current:', !!codeReaderRef.current)
+            console.log('scanningRef.current:', scanningRef.current)
+            scanBarcode()
+          }}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Debug Manual Scan
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            console.log('Force start scanning')
+            startScanning()
+          }}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          Force Start
+        </button>
       </div>
     </div>
   )
